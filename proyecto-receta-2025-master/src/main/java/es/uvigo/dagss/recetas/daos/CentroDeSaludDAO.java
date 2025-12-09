@@ -8,4 +8,6 @@ public interface CentroDeSaludDAO extends JpaRepository<CentroDeSalud, Long> {
     // HU-A3: Filtrar centros por nombre o localidad
     List<CentroDeSalud> findByNombreContainingIgnoreCase(String nombre);
     List<CentroDeSalud> findByDireccionLocalidadContainingIgnoreCase(String localidad);
+
+    
 }

@@ -30,5 +30,62 @@ public class Medico extends Usuario {
         super(TipoUsuario.MEDICO);
     }
 
+  
+
+public String getNombre() {
+    return nombre;
+}
+
+public void setNombre(String nombre) {
+    this.nombre = nombre;
+}
+
+public String getApellidos() {
+    return apellidos;
+}
+
+public void setApellidos(String apellidos) {
+    this.apellidos = apellidos;
+}
+
+public String getDni() {
+    return dni;
+}
+
+public void setDni(String dni) {
+    this.dni = dni;
+}
+
+public String getNumColegiado() {
+    return numColegiado;
+}
+
+public void setNumColegiado(String numColegiado) {
+    this.numColegiado = numColegiado;
+}
+
+public String getTelefono() {
+    return telefono;
+}
+
+public void setTelefono(String telefono) {
+    this.telefono = telefono;
+}
+
+public String getEmail() {
+    return email;
+}
+
+public void setEmail(String email) {
+    this.email = email;
+}
+
+public CentroDeSalud getCentroDeSalud() {
+    return centroSalud;
+}
+
+public void setCentroDeSalud(CentroDeSalud centroSalud) {
+    this.centroSalud = centroSalud;
+}
 
 }

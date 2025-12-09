@@ -48,5 +48,94 @@ public class Paciente extends Usuario {
         super(TipoUsuario.PACIENTE);        
     }
 
+    // --- Getters y Setters para Paciente (Hereda de Usuario) ---
+
+public String getNombre() {
+    return nombre;
+}
+
+public void setNombre(String nombre) {
+    this.nombre = nombre;
+}
+
+public String getApellidos() {
+    return apellidos;
+}
+
+public void setApellidos(String apellidos) {
+    this.apellidos = apellidos;
+}
+
+public String getDni() {
+    return dni;
+}
+
+public void setDni(String dni) {
+    this.dni = dni;
+}
+
+public String getNumTarjetaSanitaria() {
+    return numTarjetaSanitaria;
+}
+
+public void setNumTarjetaSanitaria(String numTarjetaSanitaria) {
+    this.numTarjetaSanitaria = numTarjetaSanitaria;
+}
+
+public String getNss() {
+    return nss;
+}
+
+public void setNss(String nss) {
+    this.nss = nss;
+}
+
+public String getTelefono() {
+    return telefono;
+}
+
+public void setTelefono(String telefono) {
+    this.telefono = telefono;
+}
+
+public String getEmail() {
+    return email;
+}
+
+public void setEmail(String email) {
+    this.email = email;
+}
+
+public LocalDate getFechaNacimiento() {
+    return fechaNacimiento;
+}
+
+public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    this.fechaNacimiento = fechaNacimiento;
+}
+
+public Direccion getDireccion() {
+    return direccion;
+}
+
+public void setDireccion(Direccion direccion) {
+    this.direccion = direccion;
+}
+
+public CentroDeSalud getCentroSalud() {
+    return centroDeSalud;
+}
+
+public void setCentroSalud(CentroDeSalud centroSalud) {
+    this.centroDeSalud = centroSalud;
+}
+
+public Medico getMedico() {
+    return medico;
+}
+
+public void setMedico(Medico medico) {
+    this.medico = medico;
+}
 
 }

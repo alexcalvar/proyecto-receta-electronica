@@ -26,4 +26,60 @@ public class Medicamento implements Serializable{
     private Boolean activo = true;
 
     public Medicamento(){}
+
+    public Long getId() {
+    return id;
+}
+
+public void setId(Long id) {
+    this.id = id;
+}
+
+public String getNombreComercial() {
+    return nombreComercial;
+}
+
+public void setNombreComercial(String nombreComercial) {
+    this.nombreComercial = nombreComercial;
+}
+
+public String getPrincipioActivo() {
+    return principioActivo;
+}
+
+public void setPrincipioActivo(String principioActivo) {
+    this.principioActivo = principioActivo;
+}
+
+public String getFabricante() {
+    return fabricante;
+}
+
+public void setFabricante(String fabricante) {
+    this.fabricante = fabricante;
+}
+
+public String getFamilia() {
+    return familia;
+}
+
+public void setFamilia(String familia) {
+    this.familia = familia;
+}
+
+public Integer getNumeroDosis() {
+    return numeroDosis;
+}
+
+public void setNumeroDosis(Integer numeroDosis) {
+    this.numeroDosis = numeroDosis;
+}
+
+public Boolean getActivo() {
+    return activo;
+}
+
+public void setActivo(Boolean activo) {
+    this.activo = activo;
+}
 }
