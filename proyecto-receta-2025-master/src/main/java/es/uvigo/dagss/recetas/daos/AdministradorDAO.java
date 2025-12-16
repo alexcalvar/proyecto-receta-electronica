@@ -4,7 +4,7 @@ import es.uvigo.dagss.recetas.entidades.Administrador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface AdministradorDAO extends JpaRepository<Administrador, Long> {
+public interface AdministradorDAO extends JpaRepository<Administrador, Long> { //al extender de jpa ya tenemos las operacions CRUD
     
     // HU-A2: Listar y buscar administradores por nombre
     List<Administrador> findByNombreContainingIgnoreCase(String nombre);

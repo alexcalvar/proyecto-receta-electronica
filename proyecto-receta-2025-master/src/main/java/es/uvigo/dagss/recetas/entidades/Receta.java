@@ -36,7 +36,7 @@ public class Receta implements Serializable {
     public Receta() {
     }
 
-    // Getters y Setters...
+    
     public Prescripcion getPrescripcion() {
         return prescripcion;
     }
@@ -44,5 +44,53 @@ public class Receta implements Serializable {
     public void setPrescripcion(Prescripcion prescripcion) {
         this.prescripcion = prescripcion;
     }
-    // ... resto
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Farmacia getFarmacia() {
+        return farmacia;
+    }
+
+    public void setFarmacia(Farmacia farmacia) {
+        this.farmacia = farmacia;
+    }
+
+    public Date getFechaValidezInicio() {
+        return fechaValidezInicio;
+    }
+
+    public void setFechaValidezInicio(Date fechaValidezInicio) {
+        this.fechaValidezInicio = fechaValidezInicio;
+    }
+
+    public Date getFechaValidezFin() {
+        return fechaValidezFin;
+    }
+
+    public void setFechaValidezFin(Date fechaValidezFin) {
+        this.fechaValidezFin = fechaValidezFin;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public EstadoReceta getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoReceta estado) {
+        this.estado = estado;
+    }
+   
 }

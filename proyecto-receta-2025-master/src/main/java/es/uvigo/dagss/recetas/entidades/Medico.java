@@ -8,12 +8,14 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "MEDICO") //revisar
+@Table(name = "MEDICO")
 @DiscriminatorValue(value = "MEDICO")
 public class Medico extends Usuario {
 
     private String nombre;
     private String apellidos;
+
+    @Column(name = "num_colegiado", unique = true)
     private String dni;
     
     @Column(name = "num_colegiado", unique = true)

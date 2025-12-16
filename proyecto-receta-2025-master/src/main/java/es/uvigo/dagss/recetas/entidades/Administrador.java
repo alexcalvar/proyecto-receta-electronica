@@ -6,14 +6,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "ADMINISTRADOR")
-@DiscriminatorValue(value = "ADMINISTRADOR")
+@DiscriminatorValue(value = "ADMINISTRADOR") //redundante para la implementacion de table_per_class?
 public class Administrador extends Usuario {
 
     private String nombre;
 
     private String email;
 
-    private boolean activo;
+    //private boolean activo; ya lo obtinene a partir de usuario
 
     public Administrador() {
         super(TipoUsuario.ADMINISTRADOR);

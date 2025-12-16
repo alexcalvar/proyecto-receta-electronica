@@ -20,12 +20,16 @@ public class Paciente extends Usuario {
 
 	private String nombre;
     private String apellidos;
+
+     @Column(unique = true)
     private String dni;
     
     @Column(name = "num_tarjeta_sanitaria", unique = true)
     private String numTarjetaSanitaria;
     
+    @Column(unique = true)
     private String nss; // Numero Seguridad Social
+    
     private String telefono;
     private String email;
     
@@ -48,8 +52,7 @@ public class Paciente extends Usuario {
         super(TipoUsuario.PACIENTE);        
     }
 
-    // --- Getters y Setters para Paciente (Hereda de Usuario) ---
-
+    
 public String getNombre() {
     return nombre;
 }

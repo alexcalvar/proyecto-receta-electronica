@@ -42,6 +42,7 @@ public class DatabaseLoader implements CommandLineRunner {
             // 2. Crear Centro de Salud
             CentroDeSalud centro = new CentroDeSalud();
             centro.setNombre("Centro de Salud Teis");
+            centro.setActivo(true);
             centro.setTelefono("986123456");
             centro.setEmail("cs.teis@sergas.es");
             centro.setDireccion(new Direccion("Av. Galicia, 1", "Vigo", "36207", "Pontevedra"));
