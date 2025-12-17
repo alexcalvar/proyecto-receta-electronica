@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface PrescripcionDAO extends JpaRepository<Prescripcion, Long> {
     
-    // HU-M3: Ver prescripciones "en vigor" (Fecha fin posterior a hoy)
-    List<Prescripcion> findByPacienteAndFechaFinAfter(Paciente paciente, Date fechaActual);
+    // (HU-M3) prescripciones en vigor (Fecha fin posterior a hoy)
+    List<Prescripcion> findByPacienteAndFechaFinAfterOrderByFechaInicio(Paciente paciente, Date fechaActual);
     
-    // Historial completo del paciente
+    // Historial completo  
     List<Prescripcion> findByPaciente(Paciente paciente);
 }
