@@ -21,14 +21,14 @@ public class Paciente extends Usuario {
 	private String nombre;
     private String apellidos;
 
-     @Column(unique = true)
+    @Column(unique = true)
     private String dni;
     
     @Column(name = "num_tarjeta_sanitaria", unique = true)
     private String numTarjetaSanitaria;
     
     @Column(unique = true)
-    private String nss; // Numero Seguridad Social
+    private String nss; 
     
     private String telefono;
     private String email;

@@ -1,7 +1,9 @@
 package es.uvigo.dagss.recetas.entidades;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 import es.uvigo.dagss.recetas.utils.EstadoCita;
 import jakarta.persistence.*;
@@ -24,13 +26,13 @@ public class Cita implements Serializable {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date fecha;
+    private LocalDate fecha;
 
-    @Temporal(TemporalType.TIME)
+    //@Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    private Date hora;
+    private LocalTime hora;
 
     private Integer duracion = 15; // Por defecto 15 min
 
@@ -63,19 +65,19 @@ public class Cita implements Serializable {
         this.paciente = paciente;
     }
 
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    public Date getHora() {
+    public LocalTime getHora() {
         return hora;
     }
 
-    public void setHora(Date hora) {
+    public void setHora(LocalTime hora) {
         this.hora = hora;
     }
 

@@ -17,7 +17,7 @@ public interface MedicoDAO extends JpaRepository<Medico, Long> {
     @Query("SELECT m FROM Medico m WHERE m.centroSalud.direccion.localidad LIKE CONCAT('%', :localidad, '%')")
     List<Medico> findByLocation(@Param("localidad") String localidad);
     
-    // HU-A4: Filtrar médicos por nombre (Búsqueda aproximada)
+    // (HU-A4) Filtrar médicos por nombre 
     List<Medico> findByNombreContainingIgnoreCase(String nombre);
 
     //para cuando se seleccione el centro de salud de la lista para filtrar medicos, asi ya se busca 

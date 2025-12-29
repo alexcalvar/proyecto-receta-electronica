@@ -2,6 +2,7 @@ package es.uvigo.dagss.recetas.entidades;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,11 +30,11 @@ public class Prescripcion implements Serializable {
     private Double dosisDiaria;
     private String indicaciones;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
+    //@Temporal(TemporalType.DATE)
+    private LocalDate fechaInicio;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
+    //@Temporal(TemporalType.DATE)
+    private LocalDate fechaFin;
 
     private Boolean activa = true;
 
@@ -91,19 +92,19 @@ public class Prescripcion implements Serializable {
         this.indicaciones = indicaciones;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 
