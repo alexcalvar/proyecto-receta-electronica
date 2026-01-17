@@ -21,7 +21,7 @@ public class CentroDeSaludServiceImpl implements CentroDeSaludService {
     @Override
     @Transactional
     public CentroDeSalud crear(CentroDeSalud centro) {
-        // Podrías añadir validaciones aquí (ej: que no tenga el mismo nombre)
+        
         return centroDeSaludDAO.save(centro);
     }
 
@@ -36,7 +36,7 @@ public class CentroDeSaludServiceImpl implements CentroDeSaludService {
     @Override
     @Transactional
     public void eliminar(CentroDeSalud centro) {
-        // Normalmente borraríamos por ID, pero si tu interfaz pide el objeto:
+   
         centroDeSaludDAO.delete(centro);
     }
 
@@ -49,7 +49,7 @@ public class CentroDeSaludServiceImpl implements CentroDeSaludService {
     @Override
     @Transactional(readOnly = true)
     public List<CentroDeSalud> buscarPorNombre(String nombre) {
-        // Asumiendo que en tu DAO tienes un método tipo findByNombreContainingIgnoreCase
+       
         List<CentroDeSalud> centros = centroDeSaludDAO.findByNombreContainingIgnoreCase(nombre);
         
         if (centros != null) {
@@ -61,8 +61,7 @@ public class CentroDeSaludServiceImpl implements CentroDeSaludService {
     @Override
     @Transactional(readOnly = true)
     public List<CentroDeSalud> buscarPorLocalidad(String localidad) {
-        // Ojo aquí: Asumo que en el DAO creaste la query o el método
-        // findByDireccionLocalidadContainingIgnoreCase(localidad)
+        
         List<CentroDeSalud> centros = centroDeSaludDAO.findByLocalidad(localidad);
         
         if (centros != null) {

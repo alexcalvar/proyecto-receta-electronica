@@ -18,7 +18,7 @@ public class DatabaseLoader implements CommandLineRunner {
     private CentroDeSaludDAO centroSaludDAO;
     
     @Autowired
-    private FarmaciaDAO farmaciaDAO; // ¡Nuevo!
+    private FarmaciaDAO farmaciaDAO; 
     
     @Autowired
     private MedicoDAO medicoDAO;
@@ -31,7 +31,7 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Solo cargamos datos si no hay Centros de Salud (indicador de BD vacía)
+    
         if (centroSaludDAO.count() == 0) {
             
             System.out.println(" Iniciando carga de datos de prueba...");
@@ -50,11 +50,11 @@ public class DatabaseLoader implements CommandLineRunner {
             centro.setActivo(true);
             centro.setTelefono("986123456");
             centro.setEmail("cs.teis@sergas.es");
-            // Asumiendo que Direccion es @Embeddable. Si es @Entity, cuidado.
+           
             centro.setDireccion(new Direccion("Av. Galicia, 1", "Vigo", "36207", "Pontevedra"));
-            centroSaludDAO.save(centro); // IMPORTANTE: Guardar centro primero para tener ID
+            centroSaludDAO.save(centro); 
 
-            // 3. Crear Farmacia (¡Faltaba esto!)
+            // 3. Crear Farmacia 
             Farmacia farmacia = new Farmacia();
             farmacia.setNombreEstablecimiento("Farmacia Ldo. Martinez");
             farmacia.setNombreFarmaceutico("Luis Martinez");
@@ -73,7 +73,7 @@ public class DatabaseLoader implements CommandLineRunner {
             medico.setApellidos("Pérez");
             medico.setDni("12345678A");
             medico.setNumColegiado("36001");
-            medico.setCentroDeSalud(centro); // Relación ManyToOne
+            medico.setCentroDeSalud(centro); 
             medicoDAO.save(medico);
 
             // 5. Crear Paciente
@@ -83,12 +83,12 @@ public class DatabaseLoader implements CommandLineRunner {
             paciente.setNombre("Ana");
             paciente.setApellidos("García");
             paciente.setDni("87654321B");
-            paciente.setNumTarjetaSanitaria("TSI-0001"); // Dato clave para buscar recetas
+            paciente.setNumTarjetaSanitaria("TSI-0001"); 
             paciente.setNss("123456789012");
             paciente.setFechaNacimiento(LocalDate.of(1990, 5, 15));
             paciente.setDireccion(new Direccion("C/ Urzaiz, 20", "Vigo", "36201", "Pontevedra"));
-            paciente.setCentroSalud(centro); // Su centro asignado
-            paciente.setMedico(medico);      // Su médico asignado
+            paciente.setCentroSalud(centro); 
+            paciente.setMedico(medico);      
             pacienteDAO.save(paciente);
 
             // 6. Crear Medicamentos
@@ -97,7 +97,7 @@ public class DatabaseLoader implements CommandLineRunner {
             crearMedicamento("Amoxicilina 500mg", "Amoxicilina", "Normon", "Antibióticos");
             crearMedicamento("Omeprazol 20mg", "Omeprazol", "Cinfa", "Antiácidos");
 
-            System.out.println("✅ Datos de prueba cargados correctamente en la Base de Datos.");
+            System.out.println(" Datos de prueba cargados correctamente en la Base de Datos.");
         }
     }
 

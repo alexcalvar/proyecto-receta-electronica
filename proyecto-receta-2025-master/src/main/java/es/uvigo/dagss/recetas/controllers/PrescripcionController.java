@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controllers.excepciones.ResourceNotFoundException;
+import es.uvigo.dagss.recetas.dtos.PrescripcionDTO; 
 import es.uvigo.dagss.recetas.entidades.Prescripcion;
 import es.uvigo.dagss.recetas.servicios.PrescripcionService;
 import jakarta.validation.Valid;
@@ -36,55 +37,75 @@ public class PrescripcionController {
 
     // GET /api/prescripciones/{id}
     @GetMapping(path = "{id}")
-    public ResponseEntity<Prescripcion> buscarPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<PrescripcionDTO> buscarPorId(@PathVariable("id") Long id) { 
         Optional<Prescripcion> prescripcion = prescripcionService.buscarPorId(id);
 
         if (prescripcion.isEmpty()) {
             throw new ResourceNotFoundException("Prescripcion no encontrada");
-        } else {
-            return new ResponseEntity<>(prescripcion.get(), HttpStatus.OK);
-        }
+        } 
+        
+        
+        PrescripcionDTO dto = new PrescripcionDTO(prescripcion.get());
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    // GET /api/prescripciones?pacienteId=5 (HISTORIAL COMPLETO)
-    // Coincide con el estilo de buscarPorArticuloId del ejemplo
+    // GET /api/prescripciones?pacienteId=5 
     @RequestMapping(params = "pacienteId", method = RequestMethod.GET)
-    public ResponseEntity<List<Prescripcion>> buscarHistorialPorPaciente(
+    public ResponseEntity<List<PrescripcionDTO>> buscarHistorialPorPaciente( 
             @RequestParam(name = "pacienteId", required = true) Long pacienteId) {
         
-        List<Prescripcion> resultado = new ArrayList<>();
-        resultado = prescripcionService.buscarHistorialPorPaciente(pacienteId);
-        return new ResponseEntity<>(resultado, HttpStatus.OK);
+        
+        List<Prescripcion> entidades = prescripcionService.buscarHistorialPorPaciente(pacienteId);
+        
+       
+        List<PrescripcionDTO> dtos = new ArrayList<>();
+        for (Prescripcion p : entidades) {
+            dtos.add(new PrescripcionDTO(p));
+        }
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    // GET /api/prescripciones?pacienteId=5&soloActivas=true (SOLO VIGENTES)
-    // Sobrecarga de params para filtrar solo las activas
+    // GET /api/prescripciones?pacienteId=5&soloActivas=true 
     @RequestMapping(params = {"pacienteId", "soloActivas"}, method = RequestMethod.GET)
-    public ResponseEntity<List<Prescripcion>> buscarVigentesPorPaciente(
+    public ResponseEntity<List<PrescripcionDTO>> buscarVigentesPorPaciente( 
             @RequestParam(name = "pacienteId", required = true) Long pacienteId,
             @RequestParam(name = "soloActivas", required = true) Boolean soloActivas) {
         
-        List<Prescripcion> resultado = new ArrayList<>();
+        List<Prescripcion> entidades;
+        
+   
         if (Boolean.TRUE.equals(soloActivas)) {
-            resultado = prescripcionService.buscarVigentesPorPaciente(pacienteId);
+            entidades = prescripcionService.buscarVigentesPorPaciente(pacienteId);
         } else {
-            // Si pone false, devolvemos el historial completo
-            resultado = prescripcionService.buscarHistorialPorPaciente(pacienteId);
+            entidades = prescripcionService.buscarHistorialPorPaciente(pacienteId);
         }
-        return new ResponseEntity<>(resultado, HttpStatus.OK);
+    
+        List<PrescripcionDTO> dtos = new ArrayList<>();
+        for (Prescripcion p : entidades) {
+            dtos.add(new PrescripcionDTO(p));
+        }
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
-    // POST /api/prescripciones (Crear y generar recetas)
+    // POST /api/prescripciones
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Prescripcion> crear(@Valid @RequestBody Prescripcion prescripcion) {
-        // Al llamar a crear del servicio, se generan las recetas automáticamente (Lógica implementada antes)
+    public ResponseEntity<PrescripcionDTO> crear(@Valid @RequestBody Prescripcion prescripcion) { 
+        
+        
         Prescripcion nuevaPrescripcion = prescripcionService.crear(prescripcion);
+        
         URI uri = crearURIPrescripcion(nuevaPrescripcion);
 
-        return ResponseEntity.created(uri).body(nuevaPrescripcion);
+      
+        PrescripcionDTO dto = new PrescripcionDTO(nuevaPrescripcion);
+
+        return ResponseEntity.created(uri).body(dto);
     }
 
     // DELETE /api/prescripciones/{id}
+
     @DeleteMapping(path = "{id}")
     public ResponseEntity<HttpStatus> eliminar(@PathVariable("id") Long id) {
         Optional<Prescripcion> prescripcion = prescripcionService.buscarPorId(id);
@@ -92,14 +113,14 @@ public class PrescripcionController {
         if (prescripcion.isEmpty()) {
             throw new ResourceNotFoundException("Prescripcion no encontrada");
         } else {
-            prescripcionService.eliminar(prescripcion.get()); // O eliminar(id)
+            prescripcionService.eliminar(prescripcion.get());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    // Construye la URI del nuevo recurso
     private URI crearURIPrescripcion(Prescripcion prescripcion) {
-        return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(prescripcion.getId())
+        return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+                .buildAndExpand(prescripcion.getId())
                 .toUri();
     }
 }

@@ -49,7 +49,7 @@ public class PacienteServiceImpl implements PacienteService {
 
     @Override
     public List<Paciente> buscarPorCds(Long idCentro) {
-        return pacienteDAO.findByCentroSaludId(idCentro);
+        return pacienteDAO.findByCentroDeSaludId(idCentro);
     }
 
     @Override

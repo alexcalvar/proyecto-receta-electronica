@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 
 @Entity
 @Table(name = "PRESCRIPCION")
@@ -30,15 +30,15 @@ public class Prescripcion implements Serializable {
     private Double dosisDiaria;
     private String indicaciones;
 
-    //@Temporal(TemporalType.DATE)
+   
     private LocalDate fechaInicio;
 
-    //@Temporal(TemporalType.DATE)
+    
     private LocalDate fechaFin;
 
     private Boolean activa = true;
 
-    // Relación Maestro-Detalle con Recetas
+    
     @OneToMany(mappedBy = "prescripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Receta> recetas = new ArrayList<>();
 

@@ -9,21 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-// Asegúrate de tener estas excepciones creadas o importarlas
 import es.uvigo.dagss.recetas.controllers.excepciones.ResourceNotFoundException;
+import es.uvigo.dagss.recetas.dtos.MedicamentoDTO; 
 import es.uvigo.dagss.recetas.entidades.Medicamento;
 import es.uvigo.dagss.recetas.servicios.MedicamentoService;
 import jakarta.validation.Valid;
@@ -36,58 +26,74 @@ public class MedicamentoController {
     @Autowired
     MedicamentoService medicamentoService;
 
-    // GET /api/medicamentos (Listar todos)
+    // GET /api/medicamentos 
     @GetMapping()
-    public ResponseEntity<List<Medicamento>> buscarTodos() {
-        List<Medicamento> resultado = new ArrayList<>();
-        // Asumiendo que añadiste buscarTodos() en tu servicio, si no, usa buscarMedicamentos("")
-        resultado = medicamentoService.buscarTodos(); 
-        return new ResponseEntity<>(resultado, HttpStatus.OK);
+    public ResponseEntity<List<MedicamentoDTO>> buscarTodos() { 
+        List<Medicamento> medicamentos = medicamentoService.buscarTodos();
+        
+        
+        List<MedicamentoDTO> dtos = new ArrayList<>();
+        for (Medicamento m : medicamentos) {
+            dtos.add(new MedicamentoDTO(m));
+        }
+        
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     // GET /api/medicamentos?busqueda=ibuprofeno
     @RequestMapping(params = "busqueda", method = RequestMethod.GET)
-    public ResponseEntity<List<Medicamento>> buscarPorTexto(
+    public ResponseEntity<List<MedicamentoDTO>> buscarPorTexto( 
             @RequestParam(name = "busqueda", required = true) String busqueda) {
-        List<Medicamento> resultado = new ArrayList<>();
-        resultado = medicamentoService.filtrarPorNombreComercial(busqueda);
-        return new ResponseEntity<>(resultado, HttpStatus.OK);
+        
+        List<Medicamento> medicamentos = medicamentoService.filtrarPorNombreComercial(busqueda);
+        
+   
+        List<MedicamentoDTO> dtos = new ArrayList<>();
+        for (Medicamento m : medicamentos) {
+            dtos.add(new MedicamentoDTO(m));
+        }
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     // GET /api/medicamentos/{id}
     @GetMapping(path = "{id}")
-    public ResponseEntity<Medicamento> buscarPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<MedicamentoDTO> buscarPorId(@PathVariable("id") Long id) { 
         Optional<Medicamento> medicamento = medicamentoService.buscarPorId(id);
 
         if (medicamento.isEmpty()) {
             throw new ResourceNotFoundException("Medicamento no encontrado");
-        } else {
-            return new ResponseEntity<>(medicamento.get(), HttpStatus.OK);
         }
+        
+        return new ResponseEntity<>(new MedicamentoDTO(medicamento.get()), HttpStatus.OK);
     }
 
-    // POST /api/medicamentos (Crear)
+    // POST /api/medicamentos 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Medicamento> crear(@Valid @RequestBody Medicamento medicamento) {
-        Medicamento nuevoMedicamento = medicamentoService.modificar(medicamento);
+    public ResponseEntity<MedicamentoDTO> crear(@Valid @RequestBody Medicamento medicamento) {
+        
+        Medicamento nuevoMedicamento = medicamentoService.crear(medicamento); 
+        
         URI uri = crearURIMedicamento(nuevoMedicamento);
 
-        return ResponseEntity.created(uri).body(nuevoMedicamento);
+        return ResponseEntity.created(uri).body(new MedicamentoDTO(nuevoMedicamento));
     }
 
-    // PUT /api/medicamentos/{id} (Modificar)
+    // PUT /api/medicamentos/{id} 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Medicamento> modificar(@PathVariable("id") Long id, @Valid @RequestBody Medicamento medicamento) {
+    public ResponseEntity<MedicamentoDTO> modificar(@PathVariable("id") Long id, 
+                                                    @Valid @RequestBody Medicamento medicamento) { 
+        
         Optional<Medicamento> medicamentoOptional = medicamentoService.buscarPorId(id);
 
         if (medicamentoOptional.isEmpty()) {
             throw new ResourceNotFoundException("Medicamento no encontrado");
-        } else {
-            // Aseguramos que el ID del cuerpo coincide con el de la URL
-            medicamento.setId(id);
-            Medicamento medicamentoModificado = medicamentoService.modificar(medicamento);
-            return new ResponseEntity<>(medicamentoModificado, HttpStatus.OK);
         }
+        
+        medicamento.setId(id);
+        Medicamento medicamentoModificado = medicamentoService.modificar(medicamento);
+        
+        return new ResponseEntity<>(new MedicamentoDTO(medicamentoModificado), HttpStatus.OK);
     }
 
     // DELETE /api/medicamentos/{id}
@@ -97,16 +103,17 @@ public class MedicamentoController {
 
         if (medicamento.isEmpty()) {
             throw new ResourceNotFoundException("Medicamento no encontrado");
-        } else {
-            Medicamento med = medicamento.get();
-            medicamentoService.eliminar(med); // O eliminar(medicamento.get()) según tu servicio
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        
+        medicamentoService.eliminar(medicamento.get());
+        
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Construye la URI del nuevo recurso
     private URI crearURIMedicamento(Medicamento medicamento) {
-        return ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(medicamento.getId())
+        return ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(medicamento.getId())
                 .toUri();
     }
 }

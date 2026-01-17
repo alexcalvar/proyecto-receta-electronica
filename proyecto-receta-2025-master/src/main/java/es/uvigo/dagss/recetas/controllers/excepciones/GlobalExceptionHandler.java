@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    // CORREGIDO: El tipo de excepción en el argumento debe coincidir con la anotación
+   
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleMethodArgumentNotValidException(
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Failed validation of input data");
-        // Extraemos el mensaje de error de validación real
+        
         problemDetail.setDetail(ex.getBindingResult().toString()); 
         return problemDetail;
     }

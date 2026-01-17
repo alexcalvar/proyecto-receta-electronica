@@ -1,6 +1,7 @@
 package es.uvigo.dagss.recetas.controllers;
 
 import java.net.URI;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.uvigo.dagss.recetas.controllers.excepciones.ResourceNotFoundException;
+import es.uvigo.dagss.recetas.dtos.AdministradorDTO; 
 import es.uvigo.dagss.recetas.entidades.Administrador;
 import es.uvigo.dagss.recetas.servicios.AdministradorService;
 import jakarta.validation.Valid;
@@ -24,48 +26,69 @@ public class AdministradorController {
     @Autowired
     private AdministradorService administradorService;
 
-    // GET /api/administradores (Listar todos)
+    // GET /api/administradores 
     @GetMapping
-    public ResponseEntity<List<Administrador>> buscarTodos() {
-        return new ResponseEntity<>(administradorService.buscarTodos(), HttpStatus.OK);
+    public ResponseEntity<List<AdministradorDTO>> buscarTodos() { 
+        List<Administrador> administradores = administradorService.buscarTodos();
+        
+        
+        List<AdministradorDTO> dtos = new ArrayList<>();
+        for (Administrador admin : administradores) {
+            dtos.add(new AdministradorDTO(admin));
+        }
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
     // GET /api/administradores/{id}
     @GetMapping(path = "{id}")
-    public ResponseEntity<Administrador> buscarPorId(@PathVariable("id") Long id) {
+    public ResponseEntity<AdministradorDTO> buscarPorId(@PathVariable("id") Long id) { 
         Optional<Administrador> admin = administradorService.buscarPorId(id);
+        
         if (admin.isEmpty()) {
             throw new ResourceNotFoundException("Administrador no encontrado");
         }
-        return new ResponseEntity<>(admin.get(), HttpStatus.OK);
+        
+        // se devuelve el DTO 
+        return new ResponseEntity<>(new AdministradorDTO(admin.get()), HttpStatus.OK);
     }
 
-    // POST /api/administradores (Crear nuevo admin)
+    // POST /api/administradores 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Administrador> crear(@Valid @RequestBody Administrador admin) {
-        // En un caso real, aquí encriptaríamos la contraseña antes de pasarla al servicio
-        Administrador nuevo = administradorService.crear(admin); // O crear(admin)
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(nuevo.getId()).toUri();
-        return ResponseEntity.created(uri).body(nuevo);
+    public ResponseEntity<AdministradorDTO> crear(@Valid @RequestBody Administrador admin) { 
+        
+      
+        Administrador nuevo = administradorService.crear(admin);
+        
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(nuevo.getId())
+                .toUri();
+        
+        
+        return ResponseEntity.created(uri).body(new AdministradorDTO(nuevo));
     }
 
-    // PUT /api/administradores/{id} (Modificar datos)
+    // PUT /api/administradores/{id} 
     @PutMapping(path = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Administrador> modificar(@PathVariable("id") Long id, @Valid @RequestBody Administrador admin) {
+    public ResponseEntity<AdministradorDTO> modificar(@PathVariable("id") Long id, 
+                                                      @Valid @RequestBody Administrador admin) { 
         Optional<Administrador> adminExistente = administradorService.buscarPorId(id);
         
         if (adminExistente.isEmpty()) {
             throw new ResourceNotFoundException("Administrador no encontrado");
         }
         
-        // Aseguramos que el ID es el correcto
         admin.setId(id);
-        // Ojo: Normalmente no se permite cambiar el login o password en un PUT simple sin validaciones extra
+        
+  
         Administrador modificado = administradorService.modificar(admin);
-        return new ResponseEntity<>(modificado, HttpStatus.OK);
+
+        return new ResponseEntity<>(new AdministradorDTO(modificado), HttpStatus.OK);
     }
 
-    // DELETE /api/administradores/{id} (Baja lógica: poner activo = false)
+    // DELETE /api/administradores/{id}
+
     @DeleteMapping(path = "{id}")
     public ResponseEntity<HttpStatus> eliminar(@PathVariable("id") Long id) {
         Optional<Administrador> admin = administradorService.buscarPorId(id);
@@ -73,9 +96,10 @@ public class AdministradorController {
         if (admin.isEmpty()) {
             throw new ResourceNotFoundException("Administrador no encontrado");
         }
+        
         Administrador administrador = admin.get();
-        // Llamamos al servicio que hará la baja lógica (setActivo(false)) o física según tu implementación
-        administradorService.eliminar(administrador); 
+        administradorService.eliminar(administrador);
+        
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

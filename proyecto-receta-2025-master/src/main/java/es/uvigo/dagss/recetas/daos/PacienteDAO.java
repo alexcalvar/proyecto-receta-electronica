@@ -20,7 +20,7 @@ public interface PacienteDAO extends JpaRepository<Paciente, Long >, JpaSpecific
 
     //para cuando se seleccione el centro de salud de la lista para filtrar paciente, asi ya se busca 
     //el id del centro directamten
-    List<Paciente> findByCentroSaludId(Long id);
+    List<Paciente> findByCentroDeSaludId(Long id);
 
     //para cuando se seleccione el medico de la lista para filtrar paciente, asi ya se busca 
     //el id del medico directamten

@@ -2,13 +2,14 @@ package es.uvigo.dagss.recetas.daos;
 
 import es.uvigo.dagss.recetas.entidades.Receta;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface RecetaDAO extends JpaRepository<Receta, Long> {
+public interface RecetaDAO extends JpaRepository<Receta, Long>,JpaSpecificationExecutor<Receta> {
 
     // HU-F2: Buscamos por tarjeta, que estén planificadas y que sean válidas hoy.
     @Query("SELECT r FROM Receta r WHERE " +
@@ -19,5 +20,5 @@ public interface RecetaDAO extends JpaRepository<Receta, Long> {
                                            @Param("fechaActual") LocalDate fechaActual);
 
     // (HU-P4) ver recetas 
-    List<Receta> findByPrescripcionPacienteIdOrderByFechaDesc(Long idPaciente);
+    List<Receta> findByPrescripcionPacienteIdOrderByFechaValidezInicioDesc(Long idPaciente);
 }

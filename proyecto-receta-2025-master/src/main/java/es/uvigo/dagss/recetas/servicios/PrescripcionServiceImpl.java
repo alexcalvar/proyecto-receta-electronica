@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.uvigo.dagss.recetas.daos.MedicamentoDAO;
 import es.uvigo.dagss.recetas.daos.PacienteDAO;
 import es.uvigo.dagss.recetas.daos.PrescripcionDAO;
 import es.uvigo.dagss.recetas.daos.RecetaDAO;
@@ -29,6 +30,9 @@ public class PrescripcionServiceImpl implements PrescripcionService {
     @Autowired
     private RecetaDAO recetaDAO;
 
+    @Autowired
+    private MedicamentoDAO medicamentoDAO;
+
     @Override
     @Transactional
     public Prescripcion crear(Prescripcion prescripcion) {
@@ -37,10 +41,10 @@ public class PrescripcionServiceImpl implements PrescripcionService {
             prescripcion.setFechaInicio(LocalDate.now());
         }
         
-        // Aseguramos que nace activa
+        // asegurar que nace activa
         prescripcion.setActiva(true);
 
-        // 2. Guardar la Prescripción (necesario para tener ID antes de crear recetas)
+        // 2. Guardar la Prescripción 
         Prescripcion prescripcionGuardada = prescripcionDAO.save(prescripcion);
 
         // 3. Generar el Plan de Recetas (HU-M5)
@@ -49,47 +53,46 @@ public class PrescripcionServiceImpl implements PrescripcionService {
         return prescripcionGuardada;
     }
 
-    /**
-     * Lógica de la HU-M5: Generación automática de recetas basada en dosis.
-     */
+    
     private void generarRecetasParaPrescripcion(Prescripcion p) {
-        Medicamento m = p.getMedicamento();
         
-        // --- CÁLCULO DE DURACIÓN ---
-        Double dosisDiaria = p.getDosisDiaria();       // Ej: 2.0 pastillas al día
-        Integer dosisPorCaja = m.getNumeroDosis();     // Ej: 40 pastillas por caja
+        Medicamento m = medicamentoDAO.findById(p.getMedicamento().getId()).orElse(null);
+        
+        
+        if (m == null) m = p.getMedicamento(); 
 
-        // Validación anti-crash (por si dosis es 0 o null)
+        Double dosisDiaria = p.getDosisDiaria(); 
+        
+        Integer dosisPorCaja = m.getNumeroDosis(); 
+
         if (dosisDiaria == null || dosisDiaria <= 0) dosisDiaria = 1.0;
         if (dosisPorCaja == null || dosisPorCaja <= 0) dosisPorCaja = 1;
 
-        // ¿Cuántos días dura una caja? (Ej: 40 / 2 = 20 días)
+    
         int diasDuracionCaja = (int) Math.ceil(dosisPorCaja / dosisDiaria);
         
-        // --- BUCLE DE GENERACIÓN ---
+      
         LocalDate fechaValidezActual = p.getFechaInicio();
         LocalDate fechaFinTratamiento = p.getFechaFin();
 
-        // Mientras la fecha actual no supere el fin del tratamiento...
+        
         while (!fechaValidezActual.isAfter(fechaFinTratamiento)) {
             
             Receta receta = new Receta();
             receta.setPrescripcion(p);
-            receta.setCantidad(1); // Normalmente 1 caja por receta
+            receta.setCantidad(1); 
             receta.setEstado(EstadoReceta.PLANIFICADA);
             
-            // FECHAS (HU-M5 pide márgenes)
-            // Puede ir a la farmacia 7 días antes de que le toque
+
             receta.setFechaValidezInicio(fechaValidezActual.minusDays(7));
             
-            // La receta caduca 7 días después de que se le haya acabado teóricamente la caja
+          
             LocalDate finTeoricoCaja = fechaValidezActual.plusDays(diasDuracionCaja);
             receta.setFechaValidezFin(finTeoricoCaja.plusDays(7));
             
-            // Guardamos la receta
+       
             recetaDAO.save(receta);
 
-            // Avanzamos el calendario para la siguiente caja
             fechaValidezActual = fechaValidezActual.plusDays(diasDuracionCaja);
         }
     }
@@ -103,11 +106,11 @@ public class PrescripcionServiceImpl implements PrescripcionService {
     @Override
     @Transactional
     public void eliminar(Prescripcion prescripcion) {
-        // Borrado lógico (recomendado en sanidad)
+        // Borrado lógico
         prescripcion.setActiva(false);
         prescripcionDAO.save(prescripcion);
         
-        // Opcional: Aquí podrías buscar las recetas futuras y anularlas
+      
     }
 
     @Override
@@ -119,7 +122,7 @@ public class PrescripcionServiceImpl implements PrescripcionService {
     @Override
     @Transactional(readOnly = true)
     public List<Prescripcion> buscarHistorialPorPaciente(Long idPaciente) {
-        // Buscamos el paciente primero para asegurar que existe
+      
         return pacienteDAO.findById(idPaciente)
                 .map(paciente -> prescripcionDAO.findByPaciente(paciente))
                 .orElse(Collections.emptyList());
@@ -128,7 +131,7 @@ public class PrescripcionServiceImpl implements PrescripcionService {
     @Override
     @Transactional(readOnly = true)
     public List<Prescripcion> buscarVigentesPorPaciente(Long idPaciente) {
-        // Buscamos prescripciones cuya fecha de fin sea POSTERIOR a hoy (LocalDate.now())
+        
         return pacienteDAO.findById(idPaciente)
                 .map(paciente -> prescripcionDAO.findByPacienteAndFechaFinAfterOrderByFechaInicio(paciente, LocalDate.now()))
                 .orElse(Collections.emptyList());
