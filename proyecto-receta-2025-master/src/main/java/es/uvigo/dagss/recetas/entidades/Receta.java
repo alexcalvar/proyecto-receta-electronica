@@ -2,7 +2,8 @@ package es.uvigo.dagss.recetas.entidades;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+
 
 import es.uvigo.dagss.recetas.utils.EstadoReceta;
 
@@ -19,14 +20,14 @@ public class Receta implements Serializable {
     private Prescripcion prescripcion;
 
     @ManyToOne
-    @JoinColumn(name = "farmacia_id") // Nullable, inicialmente no tiene farmacia
+    @JoinColumn(name = "farmacia_id") 
     private Farmacia farmacia;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaValidezInicio;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaValidezFin;
+    private LocalDate fechaValidezInicio;
+
+    //@Temporal(TemporalType.DATE)
+    private LocalDate fechaValidezFin;
 
     private Integer cantidad; // Número de cajas
 
@@ -61,19 +62,19 @@ public class Receta implements Serializable {
         this.farmacia = farmacia;
     }
 
-    public Date getFechaValidezInicio() {
+    public LocalDate getFechaValidezInicio() {
         return fechaValidezInicio;
     }
 
-    public void setFechaValidezInicio(Date fechaValidezInicio) {
+    public void setFechaValidezInicio(LocalDate fechaValidezInicio) {
         this.fechaValidezInicio = fechaValidezInicio;
     }
 
-    public Date getFechaValidezFin() {
+    public LocalDate getFechaValidezFin() {
         return fechaValidezFin;
     }
 
-    public void setFechaValidezFin(Date fechaValidezFin) {
+    public void setFechaValidezFin(LocalDate fechaValidezFin) {
         this.fechaValidezFin = fechaValidezFin;
     }
 

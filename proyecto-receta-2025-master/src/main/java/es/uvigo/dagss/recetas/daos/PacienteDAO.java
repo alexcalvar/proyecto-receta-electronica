@@ -2,18 +2,27 @@ package es.uvigo.dagss.recetas.daos;
 
 import es.uvigo.dagss.recetas.entidades.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface PacienteDAO extends JpaRepository<Paciente, Long> {
+import java.util.List;
+
+
+public interface PacienteDAO extends JpaRepository<Paciente, Long >, JpaSpecificationExecutor<Paciente> {
     
-    // HU-A5: Busquedas por nombre/apellidos
+    // (HU-A5)  por nombre/apellidos
     List<Paciente> findByNombreContainingIgnoreCase(String nombre);
-    List<Paciente> findByApellidosContainingIgnoreCase(String apellidos);
     
-    // HU-A5: Busquedas por localidad
+    // (HU-A5) por localidad
     List<Paciente> findByDireccionLocalidadContainingIgnoreCase(String localidad);
 
-    // HU-F2: Buscar paciente por tarjeta sanitaria para dispensar recetas
-    Optional<Paciente> findByNumTarjetaSanitaria(String numTarjetaSanitaria);
+    // (HU-F2) Buscar paciente por tarjeta sanitaria para dispensar recetas
+    Paciente findByNumTarjetaSanitaria(String numTarjetaSanitaria);
+
+    //para cuando se seleccione el centro de salud de la lista para filtrar paciente, asi ya se busca 
+    //el id del centro directamten
+    List<Paciente> findByCentroDeSaludId(Long id);
+
+    //para cuando se seleccione el medico de la lista para filtrar paciente, asi ya se busca 
+    //el id del medico directamten
+    List<Paciente> findByMedicoId(Long id);
 }

@@ -2,9 +2,10 @@ package es.uvigo.dagss.recetas.entidades;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 
 @Entity
 @Table(name = "PRESCRIPCION")
@@ -29,15 +30,15 @@ public class Prescripcion implements Serializable {
     private Double dosisDiaria;
     private String indicaciones;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio;
+   
+    private LocalDate fechaInicio;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin;
+    
+    private LocalDate fechaFin;
 
     private Boolean activa = true;
 
-    // Relación Maestro-Detalle con Recetas
+    
     @OneToMany(mappedBy = "prescripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Receta> recetas = new ArrayList<>();
 
@@ -91,19 +92,19 @@ public class Prescripcion implements Serializable {
         this.indicaciones = indicaciones;
     }
 
-    public Date getFechaInicio() {
+    public LocalDate getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
+    public void setFechaInicio(LocalDate fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaFin() {
+    public LocalDate getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
+    public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
     }
 

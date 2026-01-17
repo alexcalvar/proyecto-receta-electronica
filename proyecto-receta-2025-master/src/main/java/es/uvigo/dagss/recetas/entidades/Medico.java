@@ -1,5 +1,7 @@
 package es.uvigo.dagss.recetas.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -15,7 +17,7 @@ public class Medico extends Usuario {
     private String nombre;
     private String apellidos;
 
-    @Column(name = "num_colegiado", unique = true)
+    @Column(name = "dni", unique = true)
     private String dni;
     
     @Column(name = "num_colegiado", unique = true)

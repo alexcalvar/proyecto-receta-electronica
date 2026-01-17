@@ -1,7 +1,9 @@
 package es.uvigo.dagss.recetas.entidades;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 import es.uvigo.dagss.recetas.utils.EstadoCita;
 import jakarta.persistence.*;
@@ -24,13 +26,13 @@ public class Cita implements Serializable {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     @Column(nullable = false)
-    private Date fecha;
+    private LocalDate fecha;
 
-    @Temporal(TemporalType.TIME)
+    //@Temporal(TemporalType.TIME)
     @Column(nullable = false)
-    private Date hora;
+    private LocalTime hora;
 
     private Integer duracion = 15; // Por defecto 15 min
 
@@ -38,4 +40,60 @@ public class Cita implements Serializable {
     private EstadoCita estado = EstadoCita.PLANIFICADA;
 
     public Cita() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Medico getMedico() {
+        return medico;
+    }
+
+    public void setMedico(Medico medico) {
+        this.medico = medico;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
+    }
+
+    public Integer getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(Integer duracion) {
+        this.duracion = duracion;
+    }
+
+    public EstadoCita getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCita estado) {
+        this.estado = estado;
+    }
 }
